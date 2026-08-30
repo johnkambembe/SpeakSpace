@@ -197,27 +197,40 @@ h1 em {
     color:var(--muted); 
 }
 .roulette-button { 
-    width:100%; 
-    margin-top:12px; 
-    padding:20px; 
-    border:1px dashed var(--ink); 
-    background:transparent; 
-    text-align:left; 
-    font:600 16px 'Space Grotesk'; 
-    cursor:pointer; 
+    width: 100%; 
+    margin-top: 12px; 
+    padding: 18px 20px; 
+    background: var(--coral);        
+    color: var(--paper);             
+    text-align: left; 
+    font: 600 16px 'Space Grotesk'; 
+    cursor: pointer; 
+    border: none;                    
+    border-radius: 12px;             
+    transition: all 0.3s ease;       
+    display: flex;                   
+    align-items: center;
+    justify-content: space-between; 
 }
 
+.roulette-button:hover { 
+    background: var(--ink);          
+    color: var(--coral);             
+    transform: scale(1.03);          /* petit zoom */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15); /* ombre douce */
+}
 
 .roulette-button span { 
-    color:var(--coral); 
-    font-size:23px; 
-    margin-right:10px; 
+    font-size: 23px; 
+    margin-right: 10px; 
+    color: inherit;                  
 }
 
 .roulette-button b { 
-    float:right; 
-    font-size:22px; 
+    font-size: 22px; 
+    color: inherit;                  
 }
+
 
 .topic-panel,.setup-panel { 
     margin-top:55px; 
