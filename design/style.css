@@ -196,7 +196,7 @@ h1 em {
     font:11px 'DM Mono',monospace; 
     color:var(--muted); 
 }
-.roulette-button { 
+.random-button { 
     width: 100%; 
     margin-top: 12px; 
     padding: 18px 20px; 
@@ -213,20 +213,20 @@ h1 em {
     justify-content: space-between; 
 }
 
-.roulette-button:hover { 
+.random-button:hover { 
     background: var(--ink);          
     color: var(--coral);             
     transform: scale(1.03);          /* petit zoom */
     box-shadow: 0 6px 12px rgba(0,0,0,0.15); /* ombre douce */
 }
 
-.roulette-button span { 
+.random-button span { 
     font-size: 23px; 
     margin-right: 10px; 
     color: inherit;                  
 }
 
-.roulette-button b { 
+.random-button b { 
     font-size: 22px; 
     color: inherit;                  
 }
