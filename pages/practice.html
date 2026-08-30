@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpeakSpace | Practice</title>
+<link rel="stylesheet" href="../design/style.css">
+</head>
+<body class="practice-page">
+
+	<header class="site-header">
+		<a class="brand" href="../index.html"><span class="brand-mark">SS</span> SpeakSpace</a>
+		<a class="text-link" href="topics.html">Change topic <span>↗</span></a>
+	</header>
+
+<main class="practice-shell">
+	<p class="eyebrow" id="categoryText">YOUR SESSION</p>
+	<h1 class="practice-topic" id="topicText">Loading your topic...</h1>
+	<div id="practiceArea">
+		<div class="timer" id="timer">
+			02:00
+		</div>
+		<p class="status" id="status">Ready when you are</p>
+
+		<div class="mic" id="mic">●</div>
+		<div class="control-row">
+			<button class="control-button" id="startBtn">Start speaking</button>
+			<button class="control-button" id="stopBtn" disabled>Stop</button>
+		</div>
+	</div>
+	<div id="result" class="result-card is-hidden"></div>
+
+</main>
+
+<script src="../js/practice.js"></script>
+
+</body>
+</html>

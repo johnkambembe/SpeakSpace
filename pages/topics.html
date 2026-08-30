@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpeakSpace | Choose a topic</title>
+  <link rel="stylesheet" href="../design/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="../index.html"><span class="brand-mark">SS</span> SpeakSpace</a>
+    <a class="text-link" href="history.html">History <span></span></a>
+  </header>
+
+    <main class="page-shell topics-page">
+
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">SESSION BUILDER / 02</p>
+          <h1>What will you<br><em>explore?</em></h1>
+        </div>
+        <p class="heading-note">Choose a category, then pick a prompt that makes you curious.</p>
+      </div>
+
+      <section id="categories" class="category-grid" aria-label="Topic categories"></section>
+      <button id="randomBtn" class="roulette-button"><span>✦</span> Surprise me with a random topic <b>↗</b></button>
+
+      <section id="topicPanel" class="topic-panel is-hidden">
+
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow" id="categoryLabel">TOPICS</p>
+            <h2 id="topicHeading">Choose one prompt</h2>
+          </div>
+          <span id="topicCount" class="mono"></span>
+        </div>
+        <div id="topicList" class="topic-list"></div>
+
+      </section>
+
+      <section id="selectedTopic" class="setup-panel is-hidden" aria-live="polite">
+        
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+  <p>© 2026 Helperspace. All rights reserved.</p>
+  <p>
+     If you have questions, feedback, want to talk or need help using <strong>SpeakSpace</strong>, 
+    feel free to reach out to me directly on social media, I would be happy to hear from you. <br>
+
+    <a href="https://www.instagram.com/john.kambembe?igsi=MXZ0dnB3ZnM5NzZvbQ==" target="_blank">Instagram</a> |
+    <a href="https://www.tiktok.com/@john.kambembe6?_r=1&_t=ZS-99IWUWMw0jB" target="_blank">TikTok</a> |
+    <a href="https://github.com/johnkambembe" target="_blank">GitHub</a> |
+    <a href="https://www.linkedin.com/in/john-kambembe-6901733a9" target="_blank">LinkedIn</a>
+  </p>
+</footer>
+
+  <script src="../js/topics.js"></script>
+</body>
+</html>
