@@ -28,9 +28,7 @@ let currentFeedback = null;
 let savedRecordingId = null;
 
 
-// --------------------------------------------------
-// INITIALIZATION
-// --------------------------------------------------
+
 
 if (selected) {
   topicText.textContent = `“${selected.topic}”`;
@@ -50,9 +48,6 @@ if (selected) {
 }
 
 
-// --------------------------------------------------
-// TIMER
-// --------------------------------------------------
 
 function formatTime(seconds) {
   return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
@@ -75,9 +70,7 @@ function startTimer() {
 }
 
 
-// --------------------------------------------------
-// RECORDING
-// --------------------------------------------------
+
 
 async function startRecording() {
 
@@ -164,9 +157,6 @@ function stopRecording(fromTimer = false) {
 }
 
 
-// --------------------------------------------------
-// FINISH RECORDING
-// --------------------------------------------------
 
 function finishRecording() {
 
