@@ -520,6 +520,237 @@ h1 em {
   color: var(--coral);
 }
 
+/* =========================================
+   AI FEEDBACK OPTION
+========================================= */
+
+.ai-feedback-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  max-width: 680px;
+
+  margin: 40px auto 32px;
+  padding: 24px;
+
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+}
+
+.ai-feedback-copy {
+  flex: 1;
+}
+
+.ai-feedback-copy h2 {
+  margin: 8px 0;
+  font-size: 1.15rem;
+}
+
+.ai-feedback-copy p:last-child {
+  margin: 0;
+  opacity: 0.7;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   TOGGLE
+========================================= */
+
+.switch {
+  position: relative;
+  display: inline-block;
+
+  width: 52px;
+  height: 30px;
+
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+
+  cursor: pointer;
+
+  background: #d6d6d6;
+
+  border-radius: 999px;
+
+  transition: 0.25s;
+}
+
+.slider::before {
+  content: "";
+
+  position: absolute;
+
+  width: 22px;
+  height: 22px;
+
+  left: 4px;
+  top: 4px;
+
+  background: white;
+
+  border-radius: 50%;
+
+  transition: 0.25s;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+.switch input:checked + .slider {
+  background: #111;
+}
+
+
+/* =========================================
+   AI STATUS
+========================================= */
+
+.ai-feedback-status {
+  max-width: 680px;
+
+  margin: 0 auto 24px;
+
+  text-align: center;
+
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+
+/* =========================================
+   AI FEEDBACK CARD
+========================================= */
+
+.ai-feedback-card {
+  margin-top: 32px;
+  padding: 28px;
+
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 18px;
+
+  text-align: left;
+}
+
+.ai-feedback-heading {
+  margin-bottom: 28px;
+}
+
+.feedback-section {
+  padding: 22px 0;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.feedback-section h3 {
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+}
+
+.transcript {
+  line-height: 1.8;
+  white-space: pre-wrap;
+  opacity: 0.85;
+}
+
+.feedback-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feedback-tag {
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.06);
+
+  font-size: 0.85rem;
+}
+
+.correction-item {
+  padding: 14px 0;
+}
+
+.correction-original {
+  margin: 0;
+
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.correction-better {
+  margin: 5px 0;
+  font-weight: 600;
+}
+
+.feedback-suggestions {
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.feedback-encouragement {
+  margin-top: 24px;
+  padding: 18px;
+
+  border-radius: 12px;
+
+  background: rgba(0, 0, 0, 0.04);
+
+  line-height: 1.6;
+}
+
+.ai-loading,
+.ai-error {
+  margin-top: 28px;
+  padding: 20px;
+
+  border-radius: 12px;
+
+  background: rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .ai-feedback-option {
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .ai-feedback-copy h2 {
+    font-size: 1rem;
+  }
+
+  .ai-feedback-card {
+    padding: 20px;
+  }
+
+}
+
 
 @keyframes pulse { 
     50% { 
