@@ -1,12 +1,8 @@
-import { GoogleGenAI } from "@google/genai";
+const { GoogleGenAI } = require("@google/genai");
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
-});
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed"
@@ -19,6 +15,10 @@ export default async function handler(req, res) {
         error: "Gemini API key is not configured."
       });
     }
+
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY
+    });
 
     const {
       audioBase64,
@@ -152,3 +152,5 @@ Rules:
     });
   }
 }
+
+module.exports = handler;

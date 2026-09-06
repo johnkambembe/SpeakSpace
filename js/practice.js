@@ -15,6 +15,7 @@ const result = document.getElementById("result");
 
 const aiFeedbackToggle = document.getElementById("aiFeedbackToggle");
 const aiFeedbackStatus = document.getElementById("aiFeedbackStatus");
+const aiFeedbackOption = document.querySelector(".ai-feedback-option");
 
 let recorder;
 let stream;
@@ -23,6 +24,8 @@ let chunks = [];
 let timerId;
 let remaining = selected?.duration || 120;
 let recordingStartedAt;
+let currentFeedback = null;
+let savedRecordingId = null;
 
 
 // --------------------------------------------------
@@ -84,14 +87,19 @@ async function startRecording() {
       audio: true
     });
 
-    const mimeType =
-      MediaRecorder.isTypeSupported("audio/webm")
-        ? "audio/webm"
-        : "audio/mp4";
+    const supportedMimeTypes = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4",
+      "audio/ogg;codecs=opus"
+    ];
+    const mimeType = supportedMimeTypes.find((type) =>
+      MediaRecorder.isTypeSupported(type)
+    );
 
-    recorder = new MediaRecorder(stream, {
-      mimeType
-    });
+    recorder = mimeType
+      ? new MediaRecorder(stream, { mimeType })
+      : new MediaRecorder(stream);
 
     chunks = [];
 
@@ -119,6 +127,7 @@ async function startRecording() {
 
     startBtn.disabled = true;
     stopBtn.disabled = false;
+    aiFeedbackOption.classList.add("is-hidden");
 
     startTimer();
 
@@ -167,6 +176,13 @@ function finishRecording() {
     type: recorder.mimeType
   });
 
+  if (!blob.size) {
+    statusEl.textContent = "No audio was captured. Please try recording again.";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    return;
+  }
+
   const audioUrl = URL.createObjectURL(blob);
 
   const elapsed = Math.max(
@@ -185,7 +201,7 @@ function finishRecording() {
       Your recording · ${formatTime(elapsed)}
     </p>
 
-    <audio controls src="${audioUrl}"></audio>
+    <audio id="recordingPlayer" controls></audio>
 
     <div class="result-actions">
 
@@ -209,6 +225,13 @@ function finishRecording() {
 
     <div id="feedbackContainer"></div>
   `;
+
+  const recordingPlayer = result.querySelector("#recordingPlayer");
+  recordingPlayer.src = audioUrl;
+  recordingPlayer.load();
+  recordingPlayer.addEventListener("error", () => {
+    statusEl.textContent = "Recording created, but this browser cannot play its audio format.";
+  }, { once: true });
 
   result.querySelector("#saveBtn").addEventListener(
     "click",
@@ -302,7 +325,12 @@ async function analyzeAudio(blob) {
     aiFeedbackStatus.textContent =
       "Your feedback is ready.";
 
+    currentFeedback = data.feedback;
     renderFeedback(data.feedback);
+
+    if (savedRecordingId !== null) {
+      updateSavedFeedback(savedRecordingId, currentFeedback);
+    }
 
   } catch (error) {
 
@@ -511,6 +539,9 @@ function resetSession() {
   startBtn.disabled = false;
 
   stopBtn.disabled = true;
+  currentFeedback = null;
+  savedRecordingId = null;
+  aiFeedbackOption.classList.remove("is-hidden");
 
 }
 
@@ -519,7 +550,22 @@ function resetSession() {
 // SAVE TO INDEXEDDB
 // --------------------------------------------------
 
-function saveRecording(blob, elapsed) {
+async function saveRecording(blob, elapsed) {
+
+  const saveButton = document.getElementById("saveBtn");
+  const saveMessage = document.getElementById("saveMessage");
+  saveButton.disabled = true;
+  saveMessage.textContent = "Saving your recording...";
+
+  let audioData;
+
+  try {
+    audioData = await blob.arrayBuffer();
+  } catch (error) {
+    saveButton.disabled = false;
+    saveMessage.textContent = "This recording could not be read.";
+    return;
+  }
 
   const request = indexedDB.open("SpeaklyDB", 1);
 
@@ -545,34 +591,58 @@ function saveRecording(blob, elapsed) {
       "readwrite"
     );
 
-    transaction
-      .objectStore("recordings")
-      .add({
-
-        topic: selected.topic,
-
-        category: selected.category,
-
-        duration: elapsed,
-
-        date: new Date().toISOString(),
-
-        audio: blob
-
-      });
+    const addRequest = transaction.objectStore("recordings").add({
+      topic: selected.topic,
+      category: selected.category,
+      duration: elapsed,
+      date: new Date().toISOString(),
+      audioData,
+      mimeType: blob.type || "audio/webm",
+      feedback: currentFeedback
+    });
 
 
     transaction.oncomplete = () => {
 
-      document.getElementById("saveMessage").textContent =
+      savedRecordingId = addRequest.result;
+
+      saveMessage.textContent =
         "Saved in your history.";
 
-      document.getElementById("saveBtn").disabled = true;
+    };
 
+    transaction.onerror = () => {
+      saveButton.disabled = false;
+      saveMessage.textContent =
+        "This recording could not be saved in your browser.";
     };
 
   };
 
+  request.onerror = () => {
+    saveButton.disabled = false;
+    saveMessage.textContent =
+      "This recording could not be saved in your browser.";
+
+  };
+
+}
+
+function updateSavedFeedback(recordingId, feedback) {
+  const request = indexedDB.open("SpeaklyDB", 1);
+
+  request.onsuccess = () => {
+    const database = request.result;
+    const transaction = database.transaction("recordings", "readwrite");
+    const store = transaction.objectStore("recordings");
+    const getRequest = store.get(recordingId);
+
+    getRequest.onsuccess = () => {
+      if (getRequest.result) {
+        store.put({ ...getRequest.result, feedback });
+      }
+    };
+  };
 }
 
 

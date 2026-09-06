@@ -11,6 +11,24 @@
 
 <body class="practice-page">
 
+  <section class="ai-feedback-option" aria-label="Optional feedback">
+
+    <div class="ai-feedback-copy">
+      <span class="ai-feedback-label">Optional feedback</span>
+      <span class="ai-feedback-message">Analyze your audio after practice</span>
+    </div>
+
+    <label class="switch">
+      <input
+        type="checkbox"
+        id="aiFeedbackToggle"
+      >
+
+      <span class="slider"></span>
+    </label>
+
+  </section>
+
   <header class="site-header">
     <a class="brand" href="../index.html">
       <span class="brand-mark">SS</span>
@@ -32,33 +50,6 @@
     <h1 class="practice-topic" id="topicText">
       Loading your topic...
     </h1>
-
-
-    <!-- AI FEEDBACK TOGGLE -->
-
-    <section class="ai-feedback-option">
-
-      <div class="ai-feedback-copy">
-        <p class="eyebrow">OPTIONAL SUPPORT</p>
-
-        <h2>Want feedback after your practice?</h2>
-
-        <p>
-          Turn this on to receive a transcription and gentle feedback.
-          You can always practice without it.
-        </p>
-      </div>
-
-      <label class="switch">
-        <input
-          type="checkbox"
-          id="aiFeedbackToggle"
-        >
-
-        <span class="slider"></span>
-      </label>
-
-    </section>
 
 
     <div id="aiFeedbackStatus" class="ai-feedback-status is-hidden">
