@@ -460,10 +460,10 @@ function showTopic(categoryKey, topic) {
   <p class="eyebrow">YOUR SELECTED TOPIC / ${category.label.toUpperCase()}</p>
   <h2>“${topic}”</h2><span class="duration-label">SPEAKING TIME</span>
     <div class="duration-options">
+      <button class="duration-option" data-duration="30">30 sec</button>
       <button class="duration-option" data-duration="60">1 min</button>
       <button class="duration-option selected" data-duration="120">2 min</button>
-      <button class="duration-option" data-duration="300">5 min</button>
-      <button class="duration-option" data-duration="600">10 min</button>
+      <button class="duration-option" data-duration="180">3 min</button>
     </div>
   <button id="startSession" class="start-session">Continue to practice →</button>
   </div>`;

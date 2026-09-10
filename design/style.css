@@ -73,6 +73,96 @@ a {
     padding:0 30px; 
 } 
 
+.home-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 390px;
+    align-items: center;
+    gap: 90px;
+}
+
+.home-intro {
+    max-width: 650px;
+}
+
+.home-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.step-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+
+    padding: 20px;
+
+    border: 1px solid rgba(0, 0, 0, .08);
+    background: rgba(255, 255, 255, .10);
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        border-color .25s ease;
+}
+
+.step-card:hover {
+    transform: translateX(-6px);
+    border-color: rgba(0, 0, 0, .15);
+    background: rgba(235, 230, 218, .55);
+}
+
+.step-card-main {
+    background: rgba(255, 255, 255, .20);
+    border-color: rgba(0, 0, 0, .10);
+}
+
+.step-number {
+    font: 500 10px 'DM Mono', monospace;
+    color: var(--muted);
+    letter-spacing: .08em;
+    padding-top: 3px;
+}
+
+.step-card-main .step-number {
+    color: var(--ink);
+}
+
+.step-card strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.step-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+
+/* Petite interaction sur le bouton */
+
+.button-primary {
+    transition:
+        transform .2s ease,
+        background .2s ease;
+}
+
+.button-primary:hover {
+    transform: translateX(5px);
+}
+
+.button-primary span {
+    transition: transform .2s ease;
+}
+
+.button-primary:hover span {
+    transform: translateX(5px);
+}
+
 .eyebrow { 
     font:500 11px 'DM Mono',monospace; 
     letter-spacing:.12em; 
@@ -413,23 +503,59 @@ h1 em {
     margin:15px 0; 
 }
 
-.result-actions { 
-    display:flex; 
-    gap:9px; flex-wrap:wrap; 
+.result-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
 }
 
-.secondary-button { 
-    border:1px solid var(--ink); 
-    padding:12px 17px; 
-    background:transparent; 
-    cursor:pointer; 
-    font-weight:600; 
+.result-actions button {
+    min-height: 48px;
+    padding: 12px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease;
 }
 
-.saved-message { 
-    color:#4e792e; 
-    font-size:14px; 
-    margin-top:12px; 
+
+.result-actions .button-primary {
+    background: var(--ink);
+    color: white;
+    border: 1px solid var(--ink);
+}
+
+.result-actions .button-primary:hover {
+    transform: translateY(-2px);
+    background: #26302d;
+}
+
+
+.secondary-button {
+    border: 1px solid rgba(0, 0, 0, .25);
+    padding: 12px 18px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.secondary-button:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, .35);
+    border-color: var(--ink);
+}
+
+.saved-message {
+    color: #4e792e;
+    font-size: 14px;
+    margin-top: 12px;
 }
 
 .history-list { 
@@ -525,12 +651,12 @@ h1 em {
 
 .site-footer {
   text-align: center;
-  padding: 20px;
-  margin-top: 50px;
+  padding: 18px 20px;
+  margin-top: 35px;
   border-top: 1px solid var(--line);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--muted);
-  background: var(--paper);
+  background: #eee9df;
 }
 
 .site-footer a {
@@ -799,6 +925,19 @@ h1 em {
   .ai-feedback-card {
     padding: 20px;
   }
+
+  .home-hero {
+    grid-template-columns: 1fr;
+    gap: 55px;
+}
+
+.home-steps {
+    margin-top: 0;
+}
+
+.step-card:hover {
+    transform: none;
+}
 
 }
 
