@@ -10,6 +10,7 @@ const statusEl = document.getElementById("status");
 
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
+const mic = document.getElementById("mic");
 
 const result = document.getElementById("result");
 
@@ -26,6 +27,9 @@ let remaining = selected?.duration || 120;
 let recordingStartedAt;
 let currentFeedback = null;
 let savedRecordingId = null;
+let audioContext;
+let analyser;
+let meterAnimationId;
 
 
 
@@ -42,6 +46,7 @@ if (selected) {
   topicText.textContent = "No topic selected";
 
   startBtn.disabled = true;
+  mic.disabled = true;
 
   statusEl.textContent =
     "Return to topics to choose a prompt.";
@@ -67,6 +72,55 @@ function startTimer() {
     }
 
   }, 1000);
+}
+
+
+function startVoiceMeter() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContext || !stream) {
+    return;
+  }
+
+  audioContext = new AudioContext();
+  analyser = audioContext.createAnalyser();
+  analyser.fftSize = 256;
+
+  const source = audioContext.createMediaStreamSource(stream);
+  source.connect(analyser);
+
+  const data = new Uint8Array(analyser.fftSize);
+
+  const updateMeter = () => {
+    analyser.getByteTimeDomainData(data);
+
+    let squareSum = 0;
+
+    for (const sample of data) {
+      const distanceFromCenter = (sample - 128) / 128;
+      squareSum += distanceFromCenter * distanceFromCenter;
+    }
+
+    const level = Math.min(1, Math.sqrt(squareSum / data.length) * 3.5);
+    mic.style.setProperty("--level", level.toFixed(2));
+    meterAnimationId = requestAnimationFrame(updateMeter);
+  };
+
+  updateMeter();
+}
+
+
+function stopVoiceMeter() {
+  cancelAnimationFrame(meterAnimationId);
+  meterAnimationId = null;
+
+  if (audioContext) {
+    audioContext.close();
+    audioContext = null;
+  }
+
+  analyser = null;
+  mic.style.setProperty("--level", "0");
 }
 
 
@@ -113,6 +167,7 @@ async function startRecording() {
     );
 
     recorder.start();
+    startVoiceMeter();
 
     document.body.classList.add("recording");
 
@@ -120,6 +175,8 @@ async function startRecording() {
 
     startBtn.disabled = true;
     stopBtn.disabled = false;
+    mic.disabled = false;
+    mic.setAttribute("aria-label", "Stop recording");
     aiFeedbackOption.classList.add("is-hidden");
 
     startTimer();
@@ -131,6 +188,9 @@ async function startRecording() {
         ? "Microphone access was denied."
         : "Microphone unavailable. Try again.";
 
+      mic.disabled = !selected;
+      mic.setAttribute("aria-label", "Start recording");
+
   }
 
 }
@@ -139,6 +199,7 @@ async function startRecording() {
 function stopRecording(fromTimer = false) {
 
   clearInterval(timerId);
+  stopVoiceMeter();
 
   if (recorder && recorder.state !== "inactive") {
     recorder.stop();
@@ -153,6 +214,8 @@ function stopRecording(fromTimer = false) {
   }
 
   stopBtn.disabled = true;
+  mic.disabled = true;
+  mic.setAttribute("aria-label", "Start recording");
 
 }
 
@@ -161,6 +224,7 @@ function stopRecording(fromTimer = false) {
 function finishRecording() {
 
   document.body.classList.remove("recording");
+  stopVoiceMeter();
 
   const blob = new Blob(chunks, {
     type: recorder.mimeType
@@ -170,6 +234,7 @@ function finishRecording() {
     statusEl.textContent = "No audio was captured. Please try recording again.";
     startBtn.disabled = false;
     stopBtn.disabled = true;
+    mic.disabled = false;
     return;
   }
 
@@ -238,23 +303,16 @@ function finishRecording() {
   });
 
 
-  // AI OFF → nothing else happens
-
   if (!aiFeedbackToggle.checked) {
     return;
   }
 
-
-  // AI ON → analyze the audio
 
   analyzeAudio(blob);
 
 }
 
 
-// --------------------------------------------------
-// SEND AUDIO TO GEMINI BACKEND
-// --------------------------------------------------
 
 async function analyzeAudio(blob) {
 
@@ -372,10 +430,6 @@ function blobToBase64(blob) {
 
 }
 
-
-// --------------------------------------------------
-// DISPLAY FEEDBACK
-// --------------------------------------------------
 
 function renderFeedback(feedback) {
 
@@ -509,11 +563,6 @@ function escapeHTML(value) {
 
 }
 
-
-// --------------------------------------------------
-// RESET SESSION
-// --------------------------------------------------
-
 function resetSession() {
 
   remaining = selected.duration;
@@ -529,16 +578,14 @@ function resetSession() {
   startBtn.disabled = false;
 
   stopBtn.disabled = true;
+  mic.disabled = false;
+  mic.setAttribute("aria-label", "Start recording");
   currentFeedback = null;
   savedRecordingId = null;
   aiFeedbackOption.classList.remove("is-hidden");
 
 }
 
-
-// --------------------------------------------------
-// SAVE TO INDEXEDDB
-// --------------------------------------------------
 
 async function saveRecording(blob, elapsed) {
 
@@ -636,10 +683,6 @@ function updateSavedFeedback(recordingId, feedback) {
 }
 
 
-// --------------------------------------------------
-// BUTTON EVENTS
-// --------------------------------------------------
-
 startBtn.addEventListener(
   "click",
   startRecording
@@ -649,3 +692,11 @@ stopBtn.addEventListener(
   "click",
   () => stopRecording()
 );
+
+mic.addEventListener("click", () => {
+  if (recorder && recorder.state !== "inactive") {
+    stopRecording();
+  } else {
+    startRecording();
+  }
+});

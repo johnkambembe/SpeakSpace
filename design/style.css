@@ -451,19 +451,67 @@ h1 em {
     margin:10px 0 35px; 
 }
 
-.mic { 
-    display:grid; 
-    place-items:center; 
-    width:86px; 
-    height:86px; 
-    margin:0 auto 30px; 
-    border-radius:50%; 
-    background:var(--lime); 
-    font-size:35px; 
+.mic {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 86px;
+    height: 86px;
+    margin: 0 auto 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease, opacity .2s ease;
 }
-.recording .mic { 
-    animation:pulse 1.5s infinite; 
-    background:var(--coral); 
+
+.mic:hover {
+    transform: scale(1.05);
+}
+
+.mic:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.mic:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 10px;
+}
+
+.mic .icon-stop {
+    display: none;
+}
+
+.recording .mic .icon-mic {
+    display: none;
+}
+
+.recording .mic .icon-stop {
+    display: block;
+}
+
+.mic::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(calc(1 + var(--level, 0) * .35));
+    transition: transform .08s linear, opacity .2s ease;
+}
+
+.recording .mic {
+    animation: pulse 1.5s infinite;
+    background: var(--coral);
+}
+
+.recording .mic::after {
+    opacity: .35;
 }
 
 .control-row { 

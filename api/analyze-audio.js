@@ -2,6 +2,30 @@ const { GoogleGenAI } = require("@google/genai");
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
+// Retry automatique si Gemini retourne une erreur 503
+async function generateWithRetry(ai, request, maxRetries = 3) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await ai.models.generateContent(request);
+
+    } catch (error) {
+      const status = error?.status;
+
+      if (status !== 503 || attempt === maxRetries) {
+        throw error;
+      }
+
+      const delay = Math.pow(2, attempt) * 1000;
+
+      console.log(
+        `Gemini returned 503. Retry ${attempt + 1}/${maxRetries} in ${delay}ms`
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+}
+
 async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -33,7 +57,7 @@ async function handler(req, res) {
       });
     }
 
-   const prompt = `
+    const prompt = `
 You are the friendly speaking coach inside SpeakSpace.
 
 SpeakSpace is a safe and pressure-free place where people practice speaking English.
@@ -121,7 +145,8 @@ Rules:
 - Never invent information that is not supported by the audio.
 `;
 
-    const response = await ai.models.generateContent({
+    // Appel Gemini avec retry automatique en cas de 503
+    const response = await generateWithRetry(ai, {
       model: MODEL,
       contents: [
         {
@@ -169,6 +194,13 @@ Rules:
 
   } catch (error) {
     console.error("Gemini analysis error:", error);
+
+    // Si Gemini est toujours indisponible après les retries
+    if (error?.status === 503) {
+      return res.status(503).json({
+        error: "Gemini is temporarily unavailable. Please try again in a moment."
+      });
+    }
 
     return res.status(500).json({
       error: "Something went wrong while analyzing your recording."
